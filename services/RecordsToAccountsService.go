@@ -37,6 +37,10 @@ func recordsToTransactions(records [][]string, columnAccount int) []*models.Tran
 	for i := 1; i < len(records); i++ {
 		transaction := recordToTransaction(records[i], columnAccount)
 
+		if transaction.Value <= 0 {
+			continue
+		}
+
 		transactions = append(transactions, &transaction)
 	}
 
