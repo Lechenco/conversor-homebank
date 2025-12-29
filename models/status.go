@@ -1,4 +1,4 @@
-package qif
+package models
 
 type Status string
 

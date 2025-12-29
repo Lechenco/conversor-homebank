@@ -1,32 +1,20 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	"flag"
 
-	"github.com/Lechenco/conversor-homebank/encoding"
-	"github.com/Lechenco/conversor-homebank/models/qif"
+	"github.com/Lechenco/conversor-homebank/io"
+	"github.com/Lechenco/conversor-homebank/services"
 )
 
 func main() {
+	input := flag.String("f", "data/data.csv", "Input CSV file")
+	output := flag.String("o", "output.qif", "Output QIF file")
+	flag.Parse()
 
-	data := qif.Account{
-		Name: "Teste",
-		Transactions: []*qif.Transaction{
-			{
-				Date:     "2025/04/05",
-				Value:    -180.98,
-				Status:   qif.Reconcilied,
-				Payee:    "Nicole",
-				Memo:     "Transação de teste",
-				Category: "Lazer",
-			},
-		},
-	}
+	records := io.ReadCSV(*input)
 
-	str, err := encoding.Marshal([]qif.Account{data, data})
-	fmt.Print(string(str))
-	fmt.Print(err)
+	accounts := services.RecordsToAccounts(records)
 
-	os.WriteFile("data/output.qif", str, 0644)
+	io.WriteQIFFile(*output, accounts)
 }

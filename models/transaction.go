@@ -1,4 +1,4 @@
-package qif
+package models
 
 type Transaction struct {
 	Date     string  `qif:"D"`

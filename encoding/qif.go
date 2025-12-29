@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/Lechenco/conversor-homebank/models/qif"
+	"github.com/Lechenco/conversor-homebank/models"
 )
 
 var nullableTags = []string{"M"}
@@ -17,9 +17,9 @@ func Marshal(v interface{}) ([]byte, error) {
 	var err error
 
 	switch t := v.(type) {
-	case qif.Account:
+	case models.Account:
 		output, err = marshalAccount(t)
-	case []qif.Account:
+	case []models.Account:
 		for _, acc := range t {
 			o, _ := marshalAccount(acc)
 			output = output + o
@@ -31,12 +31,12 @@ func Marshal(v interface{}) ([]byte, error) {
 	return []byte(output), err
 }
 
-func marshalAccount(v qif.Account) (string, error) {
+func marshalAccount(v models.Account) (string, error) {
 	output := fmt.Sprintf("!Account\n%s\n", reflectTags(v))
 
-	output = fmt.Sprintf("%s!Type:Bank\n", output)
+	output += "!Type:Bank\n"
 	for _, t := range v.Transactions {
-		output = fmt.Sprintf("%s%s\n", output, reflectTags(*t))
+		output += fmt.Sprintf("%s\n", reflectTags(*t))
 	}
 
 	return output, nil
@@ -54,7 +54,7 @@ func reflectTags(data interface{}) string {
 		tag := val.Type().Field(i).Tag.Get("qif")
 		value := getValueString(val.Field(i))
 
-		output = fmt.Sprintf("%s%s", output, formatValueForTag(value, tag))
+		output += formatValueForTag(value, tag)
 	}
 
 	return output + "^"
