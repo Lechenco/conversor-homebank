@@ -45,8 +45,7 @@ func recordsToTransactions(records [][]string, columnAccount int) []*models.Tran
 
 func recordToTransaction(record []string, columnAccount int) models.Transaction {
 	d := time.Now().Format(DATE_FORMAT)
-	isTransfer := record[COLUMN_TRANSACTION] == "1"
-	category := record[COLUMN_CATEGORY]
+
 	value, _ := strconv.ParseFloat(record[columnAccount], 32)
 
 	transaction := models.Transaction{
@@ -54,12 +53,21 @@ func recordToTransaction(record []string, columnAccount int) models.Transaction 
 		Value:  float32(value),
 		Status: models.None,
 	}
+	addCategoryOrTransfer(&transaction, record)
 
-	if isTransfer {
+	return transaction
+}
+
+func addCategoryOrTransfer(transaction *models.Transaction, record []string) {
+	category := record[COLUMN_CATEGORY]
+
+	if isTransfer(record) {
 		transaction.Transfer = category
 	} else {
 		transaction.Category = category
 	}
+}
 
-	return transaction
+func isTransfer(record []string) bool {
+	return record[COLUMN_TRANSACTION] == "1"
 }
