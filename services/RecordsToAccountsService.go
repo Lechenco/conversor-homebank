@@ -37,7 +37,7 @@ func recordsToTransactions(records [][]string, columnAccount int) []*models.Tran
 	for i := 1; i < len(records); i++ {
 		transaction := recordToTransaction(records[i], columnAccount)
 
-		if transaction.Value <= 0 {
+		if transaction.Value == 0.0 {
 			continue
 		}
 
@@ -54,7 +54,7 @@ func recordToTransaction(record []string, columnAccount int) models.Transaction 
 
 	transaction := models.Transaction{
 		Date:   d,
-		Value:  float32(value),
+		Value:  float32(value) * -1,
 		Status: models.None,
 	}
 	addCategoryOrTransfer(&transaction, record)
