@@ -8,4 +8,5 @@ type Transaction struct {
 	Memo     string  `qif:"M"`
 	Category string  `qif:"L"`
 	Transfer string  `qif:"L[]"`
+	Number   string  `qif:"N"`
 }

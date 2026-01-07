@@ -1,6 +1,6 @@
 package reflect
 
-var nullableTags = []string{"M"}
+var nullableTags = []string{""}
 var ignoreEmptyTags = []string{"L", "L[]"}
 
 type Name string

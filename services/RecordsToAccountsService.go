@@ -56,6 +56,7 @@ func recordToTransaction(record []string, columnAccount int) models.Transaction 
 		Date:   d,
 		Value:  float32(value) * -1,
 		Status: models.None,
+		Number: "Para " + record[COLUMN_CATEGORY],
 	}
 	addCategoryOrTransfer(&transaction, record)
 
